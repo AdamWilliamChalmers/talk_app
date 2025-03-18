@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resonate AI - Cheap Talk Analyzer</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f5f7;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Header bar with logo & Book a Demo button */
+    .top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #fff;
+      padding: 10px 20px;
+      box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .logo {
+      width: 150px;
+    }
+    .demo-button {
+      background-color: #4a90e2;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 9999px; /* circular style */
+      transition: background 0.2s;
+    }
+    .demo-button:hover {
+      background-color: #357ab8;
+    }
+
+    /* Container for everything else */
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+    .subtext {
+      font-size: 14px;
+      color: #7f8c8d;
+      margin-bottom: 20px;
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      line-height: 1.4em;
+    }
+    textarea {
+      width: 100%;
+      height: 140px;
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    button {
+      background-color: #4a90e2;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #357ab8;
+    }
+
+    .result-container {
+      margin-top: 20px;
+    }
+    .score-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #f9ebd2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: #d48806;
+      margin: 20px auto;
+    }
+    .low {
+      color: red;
+    }
+    .medium {
+      color: orange;
+    }
+    .high {
+      color: green;
+    }
+
+    /* Stats container & progress bars */
+    .stats {
+      text-align: left;
+      margin-top: 20px;
+      font-size: 14px;
+      max-width: 400px;
+      margin: 20px auto 0 auto;
+    }
+    .stats .stat-label {
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    .progress-container {
+      background-color: #eee;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 20px;
+      margin-bottom: 15px;
+      width: 100%;
+      position: relative;
+    }
+    .progress-bar {
+      background-color: #4a90e2;
+      height: 100%;
+      text-align: center;
+      color: #fff;
+      line-height: 20px;
+      font-size: 12px;
+      transition: width 0.4s ease;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #95a5a6;
+    }
+
+    /* 2-Column Layout for Sample Texts */
+    .sample-texts {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .sample-column {
+      flex: 1 1 45%;
+      background-color: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 15px;
+    }
+    .sample-column h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    /* Green for Low Cheap Talk Box */
+    textarea.low-text {
+      width: 100%;
+      height: 100px;
+      border: 2px solid green;
+      color: green;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    /* Red for High Cheap Talk Box */
+    textarea.high-text {
+      width: 100%;
+      height: 100px;
+      border: 2px solid red;
+      color: red;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    /* Contact details at bottom */
+    .contact-details {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+    .contact-details a {
+      color: #4a90e2;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top header with logo link & Book a Demo button -->
+<div class="top-header">
+  <!-- Logo link to resonate site -->
+  <a href="https://www.resonateai.co.uk/" target="_blank">
+    <img
+      src="{{ url_for('static', filename='logo.png') }}"
+      alt="Resonate AI"
+      class="logo"
+    />
+  </a>
+  <!-- Book a Demo button -->
+  <a
+    href="https://calendly.com/adam-w-chalmers-ed/30min?month=2025-03"
+    class="demo-button"
+    target="_blank"
+  >
+    Book a Demo
+  </a>
+</div>
+
+<div class="container">
+
+  <h1>Cheap Talk Analyzer</h1>
+  <p class="subtext">
+    <strong>Cheap Talk</strong> refers to statements that exhibit
+    <strong>high commitment</strong> but <strong>low specificity</strong> in climate and sustainability disclosures.
+    These are lofty promises without concrete, actionable details.
+  </p>
+  <p class="subtext">
+    A <strong>high Cheap Talk Score</strong> suggests statements that
+    <em>sound ambitious but lack specificity</em>, while a
+    <strong>low Cheap Talk Score</strong> indicates
+    <em>detailed, actionable statements</em> with fewer empty promises.
+  </p>
+
+  <textarea
+    id="textInput"
+    placeholder="Paste your text here..."
+  ></textarea>
+  <br />
+  <button onclick="analyzeText()">Analyze</button>
+
+  <div id="result" class="result-container"></div>
+
+  <!-- 2-Column Sample Texts Below -->
+  <div class="sample-texts">
+    <!-- Low Cheap Talk Column -->
+    <div class="sample-column">
+      <h3 style="color: green;">Low Cheap Talk Example Text (Copy & Paste)</h3>
+      <textarea id="lowCheapText" class="low-text" readonly></textarea>
+      <br />
+      <button onclick="copyText('lowCheapText')">Copy</button>
+    </div>
+    
+    <!-- High Cheap Talk Column -->
+    <div class="sample-column">
+      <h3 style="color: red;">High Cheap Talk Example Text (Copy & Paste)</h3>
+      <textarea id="highCheapText" class="high-text" readonly></textarea>
+      <br />
+      <button onclick="copyText('highCheapText')">Copy</button>
+    </div>
+  </div>
+
+  <p class="footer">Powered by Resonate AI</p>
+
+  <!-- Contact details at bottom -->
+  <div class="contact-details">
+    Contact us at 
+    <a href="https://www.resonateai.co.uk/" target="_blank">
+      resonateai.co.uk
+    </a>
+  </div>
+</div>
+
+<script>
+  // Insert initial sample texts
+  window.onload = function() {
+    document.getElementById("lowCheapText").value =
+      "By 2030, we commit to reducing our carbon emissions by 50% through the implementation of solar energy, electric vehicle fleets, and energy-efficient manufacturing. We will invest $20 million in renewable energy projects to power 100% of our operations with clean energy by 2028.\n\nOur waste reduction initiative will cut landfill waste by 80% by optimizing supply chain logistics and switching to 100% biodegradable packaging by 2026. We will publish an annual Sustainability Impact Report detailing our progress on these commitments.";
+
+    document.getElementById("highCheapText").value =
+      "Our company is deeply committed to sustainability and environmental responsibility. We believe in setting ambitious goals to create a more eco-friendly future, and we promise to reduce our carbon footprint over time. We will actively explore various cutting-edge technologies and continue supporting global initiatives that align with our overarching sustainability objectives.";
+  };
+
+  // Copy text helper
+  function copyText(elementId) {
+    const text = document.getElementById(elementId);
+    text.select();
+    document.execCommand("copy");
+    
+    // Non-blocking "Copied!" message
+    const copiedMsg = document.createElement("div");
+    copiedMsg.innerText = "Copied!";
+    copiedMsg.style.position = "fixed";
+    copiedMsg.style.top = "10px";
+    copiedMsg.style.right = "10px";
+    copiedMsg.style.padding = "8px";
+    copiedMsg.style.color = "#fff";
+    copiedMsg.style.backgroundColor = "#4a90e2";
+    copiedMsg.style.borderRadius = "4px";
+    document.body.appendChild(copiedMsg);
+
+    setTimeout(() => {
+      document.body.removeChild(copiedMsg);
+    }, 1500);
+  }
+
+  // Analyze function
+  function analyzeText() {
+    const text = document.getElementById("textInput").value;
+
+    fetch(https://cheap-talk-analyzer-59071724480.us-central1.run.app, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ text })
+    })
+    .then(res => res.json())
+    .then(data => {
+      // Grab cheap talk probability
+      const cheapTalkScore = (data.cheap_talk_probability * 100).toFixed(1);
+      const commitment = (data.commitment_probability * 100).toFixed(1);
+      const specificity = (data.specificity_probability * 100).toFixed(1);
+
+      let cheapLabel = "Low (Clear & Specific)";
+      let cheapClass = "low"; // Low = Good (less cheap talk)
+
+      if (cheapTalkScore > 40) {
+        cheapLabel = "Medium (Some Detail, Some Promises)";
+        cheapClass = "medium";
+      }
+      if (cheapTalkScore > 70) {
+        cheapLabel = "High (Bold Promises, No Detail)";
+        cheapClass = "high";
+      }
+
+      // Build progress bars for commitment & specificity
+      const commitmentBar = `
+        <div class="stat-label">Commitment Level</div>
+        <div class="progress-container">
+          <div class="progress-bar" style="width: ${commitment}%;">
+            ${commitment}%
+          </div>
+        </div>
+      `;
+      const specificityBar = `
+        <div class="stat-label">Specificity Level</div>
+        <div class="progress-container">
+          <div class="progress-bar" style="width: ${specificity}%;">
+            ${specificity}%
+          </div>
+        </div>
+      `;
+
+      // Render final result
+      document.getElementById("result").innerHTML = `
+        <div class="score-circle ${cheapClass}">${cheapTalkScore}%</div>
+        <p><strong>Cheap Talk Score:</strong> ${cheapLabel}</p>
+        <div class="stats">
+          ${commitmentBar}
+          ${specificityBar}
+        </div>
+      `;
+    })
+    .catch(error => {
+      document.getElementById("result").innerHTML =
+        "<p style='color:red;'>Error analyzing text.</p>";
+      console.error("Error:", error);
+    });
+  }
+</script>
+</body>
+</html>

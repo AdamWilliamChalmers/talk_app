@@ -1,0 +1,40 @@
+
+# Ignore virtual environments and cache
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore Git and system files
+.git
+.DS_Store
+
+# Ignore logs and temp files
+*.log
+*.tmp
+*.tar.gz
+
+# Ignore cloud SDK files
+google-cloud-sdk/
+google-cloud-sdk-*.tar.gz
+
+# Ignore unnecessary Python dependencies
+bin/
+dist/
+build/
+
+# Ignore large machine learning model files
+torch/
+torch/*
+transformers/
+transformers/*
+huggingface_hub/
+huggingface_hub/*
+*.dylib
+*.so
+*.pkl
+*.h5
+*.onnx
+*.ckpt
+

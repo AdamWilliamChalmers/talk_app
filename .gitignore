@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual env
+.venv/
+venv/
+.env
+
+# Misc
+.DS_Store
+.ipynb_checkpoints
+.vercel

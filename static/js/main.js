@@ -32,9 +32,21 @@ function copyText(elementId) {
 }
 
 // Analyze the text using your Flask `/analyze` route
+// Analyze the text using your Flask `/analyze` route
 function analyzeText() {
   const text = document.getElementById("textInput").value;
 
+  // Show animated "Processing..." message
+  let dots = 0;
+  const resultEl = document.getElementById("result");
+  resultEl.innerHTML = `<p id="processing">Processing</p>`;
+  const processingInterval = setInterval(() => {
+    dots = (dots + 1) % 4; // cycles 0, 1, 2, 3
+    const dotStr = '.'.repeat(dots);
+    document.getElementById("processing").innerText = "Processing" + dotStr;
+  }, 500);
+
+  // Send the POST request
   fetch("/analyze", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -42,8 +54,11 @@ function analyzeText() {
   })
     .then(res => res.json())
     .then(data => {
+      // Stop the animation
+      clearInterval(processingInterval);
+
       if (data.error) {
-        document.getElementById("result").innerHTML =
+        resultEl.innerHTML =
           "<p style='color:red;'>Error: " + data.error + "</p>";
         return;
       }
@@ -81,7 +96,7 @@ function analyzeText() {
         </div>
       `;
 
-      document.getElementById("result").innerHTML = `
+      resultEl.innerHTML = `
         <div class="score-circle ${cheapClass}">${cheapTalkScore}%</div>
         <p><strong>Cheap Talk Score:</strong> ${cheapLabel}</p>
         <div class="stats">
@@ -91,7 +106,8 @@ function analyzeText() {
       `;
     })
     .catch(error => {
-      document.getElementById("result").innerHTML =
+      clearInterval(processingInterval);
+      resultEl.innerHTML =
         "<p style='color:red;'>Error analyzing text.</p>";
       console.error("Error:", error);
     });
